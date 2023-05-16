@@ -1,6 +1,6 @@
 // mill plugins
-import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.6.1`
-import $ivy.`de.tototec::de.tobiasroeser.mill.vcs.version::0.2.0`
+import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.7.0`
+import $ivy.`de.tototec::de.tobiasroeser.mill.vcs.version::0.3.1`
 import $ivy.`com.lihaoyi::mill-contrib-scoverage:`
 
 // imports
@@ -21,10 +21,10 @@ trait Deps {
   def scalaVersion: String
   def testWithMill: Seq[String]
 
-  val millMainApi = ivy"com.lihaoyi::mill-main-api:${millVersion}"
-  val millMain = ivy"com.lihaoyi::mill-main:${millVersion}"
-  val millScalalib = ivy"com.lihaoyi::mill-scalalib:${millVersion}"
-  val osLib = ivy"com.lihaoyi::os-lib:0.6.3"
+  def millMainApi = ivy"com.lihaoyi::mill-main-api:${millVersion}"
+  def millMain = ivy"com.lihaoyi::mill-main:${millVersion}"
+  def millScalalib = ivy"com.lihaoyi::mill-scalalib:${millVersion}"
+  def osLib = ivy"com.lihaoyi::os-lib:0.6.3"
   val scalaTest = ivy"org.scalatest::scalatest:3.2.13"
   val scoverageVersion = "2.0.3"
   val slf4j = ivy"org.slf4j:slf4j-api:1.7.25"
@@ -37,14 +37,12 @@ object Deps_0_10 extends Deps {
   override def scalaVersion = "2.13.8"
   // keep in sync with .github/workflows/build.yml
   override def testWithMill = Seq("0.10.7", "0.10.3", millVersion)
-  override val osLib = ivy"com.lihaoyi::os-lib:0.8.0"
+  override def osLib = ivy"com.lihaoyi::os-lib:0.8.0"
 }
 
 val millApiVersions = Seq(Deps_0_10).map(x => x.millPlatform -> x)
 
 val millItestVersions = millApiVersions.flatMap { case (_, d) => d.testWithMill.map(_ -> d) }
-
-val baseDir = build.millSourcePath
 
 val projectName = "mill-spring-boot"
 
@@ -219,7 +217,7 @@ object P extends Module {
    */
   def millw() = T.command {
     val target = mill.modules.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw")
-    val millw = baseDir / "millw"
+    val millw = T.workspace / "millw"
     os.copy.over(target.path, millw)
     os.perms.set(millw, os.perms(millw) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
     target
