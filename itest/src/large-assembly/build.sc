@@ -1,5 +1,5 @@
-import $exec.plugins
-import $exec.shared
+import $file.plugins
+import $file.shared
 
 import helper.Deps
 import de.tobiasroeser.lambdatest
