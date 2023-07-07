@@ -1,6 +1,6 @@
 // mill plugins
-import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.7.0`
-import $ivy.`de.tototec::de.tobiasroeser.mill.vcs.version::0.3.1`
+import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.7.1`
+import $ivy.`de.tototec::de.tobiasroeser.mill.vcs.version::0.4.0`
 import $ivy.`com.lihaoyi::mill-contrib-scoverage:`
 
 // imports
@@ -56,10 +56,6 @@ trait PluginModule extends ScalaModule with PublishModule with ScoverageModule {
   override def javacOptions = Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8")
   override def scalacOptions = Seq("-target:jvm-1.8", "-encoding", "UTF-8")
   override def scoverageVersion = deps.scoverageVersion
-  // we need to adapt to changed publishing policy - patch-level
-  override def scoveragePluginDep = T {
-    ivy"org.scoverage:::scalac-scoverage-plugin:${scoverageVersion()}"
-  }
 
   def pomSettings = T {
     PomSettings(
@@ -73,11 +69,13 @@ trait PluginModule extends ScalaModule with PublishModule with ScoverageModule {
   }
 
   override def skipIdea: Boolean = millApiVersions.head._2.scalaVersion != deps.scalaVersion
+
+  trait Tests extends ScalaTests with ScoverageTests
 }
 
-object main extends Cross[MainCross](millApiVersions.map(_._1): _*)
-class MainCross(override val millPlatform: String) extends CrossScalaModule with PluginModule { main =>
-  override def crossScalaVersion = deps.scalaVersion
+object main extends Cross[MainCross](millApiVersions.map(_._1))
+trait MainCross extends PluginModule with Cross.Module[String] { main =>
+  override def millPlatform = crossValue
   override def artifactName = T { "de.tobiasroeser.mill.spring.boot" }
   override def moduleDeps: Seq[PublishModule] = Seq(worker)
   override def ivyDeps = T {
@@ -142,16 +140,12 @@ class MainCross(override val millPlatform: String) extends CrossScalaModule with
   }
 }
 
-object itest extends Cross[ItestCross](millItestVersions.map(_._1): _*) with TaskModule {
-  override def defaultCommandName(): String = "test"
-  def testCached: T[Seq[TestCase]] = itest(millItestVersions.map(_._1).head).testCached
-  def test(args: String*): Command[Seq[TestCase]] = itest(millItestVersions.map(_._1).head).test(args: _*)
-}
-class ItestCross(millItestVersion: String) extends MillIntegrationTestModule {
+object itest extends Cross[ItestCross](millItestVersions.map(_._1))
+trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
+  def millItestVersion = crossValue
   val millPlatform = millItestVersions.toMap.apply(millItestVersion).millPlatform
   def deps: Deps = millApiVersions.toMap.apply(millPlatform)
 
-  override def millSourcePath: os.Path = super.millSourcePath / os.up
   override def millTestVersion = millItestVersion
   override def pluginsUnderTest = Seq(main(millPlatform))
   override def temporaryIvyModules = Seq(main(millPlatform).worker, main(millPlatform).worker.impl)
@@ -179,7 +173,7 @@ class ItestCross(millItestVersion: String) extends MillIntegrationTestModule {
     }
 
   override def temporaryIvyModulesDetails
-      : Task.Sequence[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))] =
+      : Task[Seq[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))]] =
     Target.traverse(temporaryIvyModules) { p =>
       val jar = p match {
         case p: ScoverageModule => p.scoverage.jar
@@ -187,7 +181,7 @@ class ItestCross(millItestVersion: String) extends MillIntegrationTestModule {
       }
       jar zip (p.sourceJar zip (p.docJar zip (p.pom zip (p.ivy zip p.artifactMetadata))))
     }
-  override def pluginUnderTestDetails: Task.Sequence[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))] =
+  override def pluginUnderTestDetails: Task[Seq[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))]] =
     Target.traverse(pluginsUnderTest) { p =>
       val jar = p match {
         case p: ScoverageModule => p.scoverage.jar
