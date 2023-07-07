@@ -1,0 +1,75 @@
+= mill-sping-boot - Support packaging Spring Boot applications with Mill
+:version: 0.0.1-SNAPSOT
+:mill-platform: 0.10
+:artifact-name: de.tobiasroeser.mill.spring.boot
+:project-name: mill-spring-boot
+:project-home: https://github.com/lefou/{project-name}
+:min-mill-version: 0.10.0
+:example-spring-boot-version: 2.7.3
+:toc:
+:toc-placement: preamble
+
+ifdef::env-github[]
+image:{project-home}/workflows/.github/workflows/build.yml/badge.svg["Build Status (GitHub Actions)", link="{project-home}/actions"]
+image:https://codecov.io/gh/lefou/{project-name}/branch/main/graph/badge.svg[Test Coverage (Codecov.io), link="https://codecov.io/gh/lefou/{project-name}"]
+endif::[]
+
+
+== Quickstart
+
+Mill version {min-mill-version} or newer is required.
+
+[source,scala,subs="attributes,verbatim"]
+----
+import mill._
+import mill.scalalib._
+import de.tobiasroeser.mill.spring.boot.SpringBootModule
+
+object app extends MavenModule with SpringBootModule {
+  override def springBootToolsVersion = "{example-spring-boot-version}"
+}
+----
+
+[source,shell]
+----
+# Run the Spring-Boot Application
+$ mill app.run
+
+# Package as exeutable Spring-Boot Application
+$ mill app.assembly
+----
+
+== Download
+
+You can download binary releases from https://search.maven.org/artifact/de.tototec/{artifact-name}_mill{mill-platform}_2.13[Maven Central].
+
+Please make sure to use the correct _mill platform suffix_ matching your used mill version.
+
+
+== License
+
+This project is published under the terms of the https://www.apache.org/licenses/LICENSE-2.0[Apache License, version 2]
+
+
+== About
+
+Mill::
+  https://github.com/lihaoyi/mill[Mill] is a Scala-based open source build tool.
+  In my opinion the best build tool for the JVM.
+  It is fast, reliable and easy to understand.
+
+Me::
++
+--
+I am https://github.com/lefou/[Tobias Roeser], a professional software developer who loves to create and use open source tools.
+I'm actively developing and maintaining mill as well as https://github.com/lefou?utf8=%E2%9C%93&tab=repositories&q=topic%3Amill&type=&language=[several mill plugins].
+
+If you like my work, please star it on GitHub. You can also support me via https://github.com/sponsors/lefou[GitHub Sponsors].
+--
+
+Contributing::
+  If you found a bug or have a feature request, please open a {projectHome}/issues[new issue on GitHub].
+  I also accept {projectHome}/pulls[pull requests on GitHub].
+
+== Changelog
+
