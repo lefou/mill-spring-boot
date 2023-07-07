@@ -145,7 +145,7 @@ class MainCross(override val millPlatform: String) extends CrossScalaModule with
 object itest extends Cross[ItestCross](millItestVersions.map(_._1): _*) with TaskModule {
   override def defaultCommandName(): String = "test"
   def testCached: T[Seq[TestCase]] = itest(millItestVersions.map(_._1).head).testCached
-  def test(args: String*): Command[Seq[TestCase]] = itest(millItestVersions.map(_._1).head).test()
+  def test(args: String*): Command[Seq[TestCase]] = itest(millItestVersions.map(_._1).head).test(args: _*)
 }
 class ItestCross(millItestVersion: String) extends MillIntegrationTestModule {
   val millPlatform = millItestVersions.toMap.apply(millItestVersion).millPlatform
@@ -165,6 +165,13 @@ class ItestCross(millItestVersion: String) extends MillIntegrationTestModule {
             TestInvocation.Targets(Seq("app.assembly")),
             TestInvocation.Targets(Seq("validateAssembly"))
           )
+        case "large-assembly" => Seq(
+          TestInvocation.Targets(Seq("app.jar")),
+          TestInvocation.Targets(Seq("validateJar")),
+          TestInvocation.Targets(Seq("app.run")),
+          TestInvocation.Targets(Seq("app.assembly")),
+          TestInvocation.Targets(Seq("validateAssembly"))
+        )
         case _ => Seq(
             TestInvocation.Targets(Seq("-d", "verify"))
           )

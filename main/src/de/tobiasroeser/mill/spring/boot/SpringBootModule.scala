@@ -68,6 +68,15 @@ trait SpringBootModule extends JavaModule {
 //    PathRef(dest)
 //  }
 
+  override def prependShellScript: T[String] = T {
+    mill.modules.Jvm.launcherUniversalScript(
+      mainClass = "org.springframework.boot.loader.JarLauncher",
+      shellClassPath = Agg("$0"),
+      cmdClassPath = Agg("%~dpnx0"),
+      jvmArgs = forkArgs()
+    )
+  }
+
   override def assembly: T[PathRef] = T {
     //    val base = upstreamAssembly().path
     //    val jar = T.dest / "out.jar"
@@ -81,12 +90,14 @@ trait SpringBootModule extends JavaModule {
     val mainClass = finalMainClass()
     val dest = T.dest / "out.jar"
     val worker = springBootToolsWorker()
+    val script = prependShellScript()
 
     worker.repackageJar(
       dest = dest,
       base = base,
       mainClass = mainClass,
-      libs = libs
+      libs = libs,
+      assemblyScript = script
     )
 
     PathRef(dest)

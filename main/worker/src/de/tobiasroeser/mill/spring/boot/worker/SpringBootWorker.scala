@@ -13,6 +13,7 @@ trait SpringBootWorker {
       dest: os.Path,
       base: os.Path,
       mainClass: String,
-      libs: Seq[os.Path]
+      libs: Seq[os.Path],
+      assemblyScript: String
   )(implicit ctx: Ctx): Unit
 }

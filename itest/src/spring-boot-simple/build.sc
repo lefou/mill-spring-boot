@@ -31,7 +31,9 @@ def validateAssembly() = T.command {
   lambdatest.Assert.assertTrue(os.exists(jar), "missing? " + os.list(jar / os.up))
 
   val res = os.proc("java", "-jar", jar, "-o", "ran.log").call(cwd = T.dest)
-
   lambdatest.Assert.assertEquals(os.read(T.dest / "ran.log").trim(), "1".trim(), s"res: ${res}")
+
+  val res2 = os.proc(jar, "-o", "ran2.log").call(cwd = T.dest)
+  lambdatest.Assert.assertEquals(os.read(T.dest / "ran2.log").trim(), "1".trim(), s"res: ${res}")
   ()
 }
