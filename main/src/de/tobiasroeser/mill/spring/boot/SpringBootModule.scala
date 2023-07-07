@@ -9,21 +9,12 @@ import mill.scalalib.{Dep, DepSyntax, JavaModule}
 
 import java.net.{URL, URLClassLoader}
 
-trait SpringBootModule extends JavaModule {
+trait SpringBootModule extends SpringBootModulePlatform {
 
   def springBootToolsVersion: T[String]
 
-  def springBootToolsIvyDeps: T[Agg[Dep]] = T {
+  override def springBootToolsIvyDeps: T[Agg[Dep]] = T {
     Agg(ivy"org.springframework.boot:spring-boot-loader-tools:${springBootToolsVersion()}")
-  }
-
-  private def fullWorkerIvyDeps = T {
-    springBootToolsIvyDeps() ++
-      Agg(ivy"${Versions.millSpringBootWorkerImplIvyDep}")
-  }
-
-  def springBootToolsClasspath: T[Agg[PathRef]] = T {
-    resolveDeps(fullWorkerIvyDeps)()
   }
 
   def springBootToolsWorker: Worker[SpringBootWorker] = T.worker {
@@ -78,13 +69,6 @@ trait SpringBootModule extends JavaModule {
   }
 
   override def assembly: T[PathRef] = T {
-    //    val base = upstreamAssembly().path
-    //    val jar = T.dest / "out.jar"
-    //    SpringBootUtil.createJar(
-    //      dest = jar,
-    //      base = Some(base),
-    //    )
-
     val libs = runClasspath().map(_.path)
     val base = jar().path
     val mainClass = finalMainClass()

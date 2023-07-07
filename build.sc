@@ -12,13 +12,14 @@ import mill.api.Loose
 import mill.contrib.scoverage.ScoverageModule
 import mill.define.{Command, Module, TaskModule, Target, Task}
 import mill.scalalib._
+import mill.scalalib.api.ZincWorkerUtil
 import mill.scalalib.publish._
 
 trait Deps {
   def springBootToolsVersion = "2.7.3"
   def millPlatform: String
   def millVersion: String
-  def scalaVersion: String
+  def scalaVersion: String = "2.13.11"
   def testWithMill: Seq[String]
 
   def millMainApi = ivy"com.lihaoyi::mill-main-api:${millVersion}"
@@ -31,16 +32,20 @@ trait Deps {
   val utilsFunctional = ivy"de.tototec:de.tototec.utils.functional:2.0.1"
   val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:2.7.3"
 }
+object Deps_0_11 extends Deps {
+  override def millVersion = "0.11.0"
+  override def millPlatform = "0.11"
+  override def testWithMill = Seq("0.11.1", millVersion)
+  override def osLib = ivy"com.lihaoyi::os-lib:0.9.1"
+}
 object Deps_0_10 extends Deps {
   override def millVersion = "0.10.0"
   override def millPlatform = "0.10"
-  override def scalaVersion = "2.13.8"
-  // keep in sync with .github/workflows/build.yml
-  override def testWithMill = Seq("0.10.7", "0.10.3", millVersion)
+  override def testWithMill = Seq("0.10.12", "0.10.3", millVersion)
   override def osLib = ivy"com.lihaoyi::os-lib:0.8.0"
 }
 
-val millApiVersions = Seq(Deps_0_10).map(x => x.millPlatform -> x)
+val millApiVersions = Seq(Deps_0_11, Deps_0_10).map(x => x.millPlatform -> x)
 
 val millItestVersions = millApiVersions.flatMap { case (_, d) => d.testWithMill.map(_ -> d) }
 
@@ -51,7 +56,13 @@ trait PluginModule extends ScalaModule with PublishModule with ScoverageModule {
   def deps: Deps = millApiVersions.toMap.apply(millPlatform)
   override def scalaVersion: T[String] = deps.scalaVersion
   override def publishVersion: T[String] = VcsVersion.vcsState().format()
-  override def artifactSuffix: T[String] = s"_mill${millPlatform}_${artifactScalaVersion()}"
+  override def platformSuffix = s"_mill${millPlatform}"
+
+  override def sources = T.sources {
+    super.sources() ++
+      ZincWorkerUtil.matchingVersions(millPlatform).map(s => PathRef(millSourcePath / s"src-$s")) ++
+      ZincWorkerUtil.versionRanges(millPlatform, millApiVersions.map(_._1)).map(s => PathRef(millSourcePath / s"src-$s"))
+  }
 
   override def javacOptions = Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8")
   override def scalacOptions = Seq("-target:jvm-1.8", "-encoding", "UTF-8")
@@ -217,7 +228,7 @@ object P extends Module {
    * Update the millw script.
    */
   def millw() = T.command {
-    val target = mill.modules.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw")
+    val target = mill.util.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw")
     val millw = T.workspace / "millw"
     os.copy.over(target.path, millw)
     os.perms.set(millw, os.perms(millw) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
