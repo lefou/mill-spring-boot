@@ -64,8 +64,8 @@ trait PluginModule extends ScalaModule with PublishModule with ScoverageModule {
       ZincWorkerUtil.versionRanges(millPlatform, millApiVersions.map(_._1)).map(s => PathRef(millSourcePath / s"src-$s"))
   }
 
-  override def javacOptions = Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8")
-  override def scalacOptions = Seq("-target:jvm-1.8", "-encoding", "UTF-8")
+  override def javacOptions = Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8", "-deprecation")
+  override def scalacOptions = Seq("-target:jvm-1.8", "-encoding", "UTF-8", "-deprecation")
   override def scoverageVersion = deps.scoverageVersion
 
   def pomSettings = T {
