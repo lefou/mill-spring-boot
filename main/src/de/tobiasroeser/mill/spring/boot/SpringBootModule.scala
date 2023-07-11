@@ -42,24 +42,7 @@ trait SpringBootModule extends SpringBootModulePlatform {
     worker
   }
 
-//  override def upstreamAssembly: T[PathRef] = T {
-//    val libs = runClasspath().map(_.path)
-//    val base = jar().path
-//    val mainClass = finalMainClass()
-//    val dest = T.dest / "out.jar"
-//    val worker = springBootToolsWorker()
-//
-//    worker.repackageJar(
-//      dest = dest,
-//      base = base,
-//      mainClass = mainClass,
-//      libs = libs
-//    )
-//
-//    PathRef(dest)
-//  }
-
-  override def prependShellScript: T[String] = T {
+  def springBootPrependScript: T[String] = T {
     mill.modules.Jvm.launcherUniversalScript(
       mainClass = "org.springframework.boot.loader.JarLauncher",
       shellClassPath = Agg("$0"),
@@ -68,13 +51,13 @@ trait SpringBootModule extends SpringBootModulePlatform {
     )
   }
 
-  override def assembly: T[PathRef] = T {
+  def springBootAssembly: T[PathRef] = T {
     val libs = runClasspath().map(_.path)
     val base = jar().path
     val mainClass = finalMainClass()
     val dest = T.dest / "out.jar"
     val worker = springBootToolsWorker()
-    val script = prependShellScript()
+    val script = springBootPrependScript()
 
     worker.repackageJar(
       dest = dest,
@@ -85,10 +68,6 @@ trait SpringBootModule extends SpringBootModulePlatform {
     )
 
     PathRef(dest)
-  }
-
-  def assemblyManifest: Target[Jvm.JarManifest] = T {
-    manifest()
   }
 
 }

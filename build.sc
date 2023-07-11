@@ -167,14 +167,14 @@ trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
             TestInvocation.Targets(Seq("app.jar")),
             TestInvocation.Targets(Seq("validateJar")),
             TestInvocation.Targets(Seq("app.run")),
-            TestInvocation.Targets(Seq("app.assembly")),
+            TestInvocation.Targets(Seq("app.springBootAssembly")),
             TestInvocation.Targets(Seq("validateAssembly"))
           )
         case "large-assembly" => Seq(
           TestInvocation.Targets(Seq("app.jar")),
           TestInvocation.Targets(Seq("validateJar")),
           TestInvocation.Targets(Seq("app.run")),
-          TestInvocation.Targets(Seq("app.assembly")),
+          TestInvocation.Targets(Seq("app.springBootAssembly")),
           TestInvocation.Targets(Seq("validateAssembly"))
         )
         case _ => Seq(

@@ -38,9 +38,7 @@ def validateJar() = T.command {
 }
 
 def validateAssembly() = T.command {
-//  val baseJar = T.workspace / "out" / "app" / "upstreamAssembly.dest" / "out.jar"
-//  lambdatest.Assert.assertTrue(os.exists(baseJar))
-  val jar = T.workspace / "out" / "app" / "assembly.dest" / "out.jar"
+  val jar = T.workspace / "out" / "app" / "springBootAssembly.dest" / "out.jar"
   lambdatest.Assert.assertTrue(os.exists(jar), "missing? " + os.list(jar / os.up))
 
   val res = os.proc("java", "-jar", jar, "-o", "ran.log").call(cwd = T.dest)
