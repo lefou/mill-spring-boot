@@ -151,6 +151,18 @@ trait MainCross extends PluginModule with Cross.Module[String] { main =>
   }
 }
 
+/**
+ * Explore some Maven deps.
+ */
+object explore extends ScalaModule {
+  val Deps = Deps_0_11
+  def scalaVersion = Deps.scalaVersion
+  override def ivyDeps = Agg(
+    Deps.springBootLoaderTools,
+    ivy"org.springframework.boot:spring-boot-maven-plugin:${Deps.springBootLoaderTools.version}"
+  )
+}
+
 object itest extends Cross[ItestCross](millItestVersions.map(_._1))
 trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
   def millItestVersion = crossValue

@@ -1,14 +1,9 @@
 package de.tobiasroeser.mill.spring.boot.worker
 
 import mill.api.Ctx
+import os.Path
 
 trait SpringBootWorker {
-//  def createJar(
-//      dest: os.Path,
-//      base: Option[os.Path] = None,
-//      libs: Seq[os.Path] = Seq()
-//  )(ctx: Ctx): Unit
-
   def repackageJar(
       dest: os.Path,
       base: os.Path,
@@ -16,4 +11,6 @@ trait SpringBootWorker {
       libs: Seq[os.Path],
       assemblyScript: String
   )(implicit ctx: Ctx): Unit
+
+  def findMainClass(classesPath: Path): String
 }

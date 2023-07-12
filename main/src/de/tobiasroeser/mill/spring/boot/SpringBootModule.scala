@@ -51,10 +51,16 @@ trait SpringBootModule extends SpringBootModulePlatform {
     )
   }
 
+  def springBootMainClass: T[String] = T {
+    mainClass().getOrElse {
+      springBootToolsWorker().findMainClass(compile().classes.path)
+    }
+  }
+
   def springBootAssembly: T[PathRef] = T {
     val libs = runClasspath().map(_.path)
     val base = jar().path
-    val mainClass = finalMainClass()
+    val mainClass = springBootMainClass()
     val dest = T.dest / "out.jar"
     val worker = springBootToolsWorker()
     val script = springBootPrependScript()

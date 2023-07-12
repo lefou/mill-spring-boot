@@ -6,31 +6,28 @@ import org.springframework.boot.loader.tools.{
   LaunchScript,
   Libraries,
   Library,
-  LibraryCallback,
   LibraryScope,
+  MainClassFinder,
   Repackager
 }
 import os.Path
 
 class SpringBootWorkerImpl() extends SpringBootWorker {
 
-//  override def createJar(
-//      dest: Path,
-//      base: Option[Path],
-//      libs: Seq[Path]
-//  )(ctx: Ctx): Unit = {
-//
-//
-//
-//  }
+  override def findMainClass(classesPath: os.Path): String = {
+    MainClassFinder.findSingleMainClass(
+      classesPath.toIO,
+      "org.springframework.boot.autoconfigure.SpringBootApplication"
+    )
+  }
 
   override def repackageJar(
-      dest: Path,
-      base: Path,
-      mainClass: String,
-      libs: Seq[Path],
-      assemblyScript: String
-  )(implicit ctx: Ctx): Unit = {
+                             dest: Path,
+                             base: Path,
+                             mainClass: String,
+                             libs: Seq[Path],
+                             assemblyScript: String
+                           )(implicit ctx: Ctx): Unit = {
     val repack = new Repackager(base.toIO)
     repack.setMainClass(mainClass)
 
