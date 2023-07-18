@@ -61,7 +61,9 @@ trait PluginModule extends ScalaModule with PublishModule with ScoverageModule {
   override def sources = T.sources {
     super.sources() ++
       ZincWorkerUtil.matchingVersions(millPlatform).map(s => PathRef(millSourcePath / s"src-$s")) ++
-      ZincWorkerUtil.versionRanges(millPlatform, millApiVersions.map(_._1)).map(s => PathRef(millSourcePath / s"src-$s"))
+      ZincWorkerUtil.versionRanges(millPlatform, millApiVersions.map(_._1)).map(s =>
+        PathRef(millSourcePath / s"src-$s")
+      )
   }
 
   override def javacOptions = Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8", "-deprecation")
@@ -183,20 +185,19 @@ trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
             TestInvocation.Targets(Seq("validateAssembly"))
           )
         case "large-assembly" => Seq(
-          TestInvocation.Targets(Seq("app.jar")),
-          TestInvocation.Targets(Seq("validateJar")),
-          TestInvocation.Targets(Seq("app.run")),
-          TestInvocation.Targets(Seq("app.springBootAssembly")),
-          TestInvocation.Targets(Seq("validateAssembly"))
-        )
+            TestInvocation.Targets(Seq("app.jar")),
+            TestInvocation.Targets(Seq("validateJar")),
+            TestInvocation.Targets(Seq("app.run")),
+            TestInvocation.Targets(Seq("app.springBootAssembly")),
+            TestInvocation.Targets(Seq("validateAssembly"))
+          )
         case _ => Seq(
             TestInvocation.Targets(Seq("-d", "verify"))
           )
       })
     }
 
-  override def temporaryIvyModulesDetails
-      : Task[Seq[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))]] =
+  override def temporaryIvyModulesDetails: Task[Seq[(PathRef, (PathRef, (PathRef, (PathRef, (PathRef, Artifact)))))]] =
     Target.traverse(temporaryIvyModules) { p =>
       val jar = p match {
         case p: ScoverageModule => p.scoverage.jar

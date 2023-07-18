@@ -22,12 +22,12 @@ class SpringBootWorkerImpl() extends SpringBootWorker {
   }
 
   override def repackageJar(
-                             dest: Path,
-                             base: Path,
-                             mainClass: String,
-                             libs: Seq[Path],
-                             assemblyScript: String
-                           )(implicit ctx: Ctx): Unit = {
+      dest: Path,
+      base: Path,
+      mainClass: String,
+      libs: Seq[Path],
+      assemblyScript: String
+  )(implicit ctx: Ctx): Unit = {
     val repack = new Repackager(base.toIO)
     repack.setMainClass(mainClass)
 

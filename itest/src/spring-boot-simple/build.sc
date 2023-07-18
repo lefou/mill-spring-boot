@@ -31,7 +31,7 @@ def validateAssembly() = T.command {
   val res = os.proc("java", "-jar", jar, "-o", "ran.log").call(cwd = T.dest)
   lambdatest.Assert.assertEquals(os.read(T.dest / "ran.log").trim(), "1".trim(), s"res: ${res}")
 
-  val exe = if(scala.util.Properties.isWin) {
+  val exe = if (scala.util.Properties.isWin) {
     os.copy(from = jar, to = T.dest / "app.bat")
     T.dest / "app.bat"
   } else jar
