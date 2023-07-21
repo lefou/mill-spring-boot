@@ -11,10 +11,14 @@ import java.net.{URL, URLClassLoader}
 
 trait SpringBootModule extends SpringBootModulePlatform {
 
+  /** Specifies the version of the Spring Boot tools. */
   def springBootToolsVersion: T[String]
 
   override def springBootToolsIvyDeps: T[Agg[Dep]] = T {
-    Agg(ivy"org.springframework.boot:spring-boot-loader-tools:${springBootToolsVersion()}")
+    super.springBootToolsIvyDeps() ++
+      Agg(
+        ivy"org.springframework.boot:spring-boot-loader-tools:${springBootToolsVersion()}"
+      )
   }
 
   def springBootToolsWorker: Worker[SpringBootWorker] = T.worker {
@@ -42,7 +46,15 @@ trait SpringBootModule extends SpringBootModulePlatform {
     worker
   }
 
+  /**
+   * A script prepended to the resulting `springBootAssembly` to make it executable.
+   * This uses the same prepend script as Mill `JavaModule` does,
+   * so it supports most Linux/Unix shells (probably not `fish`)
+   * as well as Windows cmd shell (the file needs a `.bat` or `.cmd` extension).
+   * Set it to `""` if you don't want an executable JAR.
+   */
   def springBootPrependScript: T[String] = T {
+    // we use the deprecated class, to keep compat with Mill 0.10
     mill.modules.Jvm.launcherUniversalScript(
       mainClass = "org.springframework.boot.loader.JarLauncher",
       shellClassPath = Agg("$0"),
@@ -51,6 +63,7 @@ trait SpringBootModule extends SpringBootModulePlatform {
     )
   }
 
+  /** The Class holding the Spring Boot Application entrypoint. By default, Spring Boot will try to auto-detect it. */
   def springBootMainClass: T[String] = T {
     mainClass().getOrElse {
       springBootToolsWorker().findMainClass(compile().classes.path)

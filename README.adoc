@@ -1,17 +1,17 @@
 = mill-sping-boot - Support packaging Spring Boot applications with Mill
-:version: 0.0.1-SNAPSOT
-:mill-platform: 0.10
+:version: 0.0.0-20-3b2d95
+:mill-platform: 0.11
 :artifact-name: de.tobiasroeser.mill.spring.boot
 :project-name: mill-spring-boot
 :project-home: https://github.com/lefou/{project-name}
 :min-mill-version: 0.10.0
-:example-spring-boot-version: 2.7.3
+:example-spring-boot-version: 2.7.14
 :toc:
 :toc-placement: preamble
 
 ifdef::env-github[]
-image:{project-home}/workflows/.github/workflows/build.yml/badge.svg["Build Status (GitHub Actions)", link="{project-home}/actions"]
-image:https://codecov.io/gh/lefou/{project-name}/branch/main/graph/badge.svg[Test Coverage (Codecov.io), link="https://codecov.io/gh/lefou/{project-name}"]
+image:{project-home}/workflows/.github/workflows/build.yml/badge.svg["Build Status (GitHub Actions)",link="{project-home}/actions"]
+image:https://codecov.io/gh/lefou/{project-name}/branch/main/graph/badge.svg[Test Coverage (Codecov.io),link="https://codecov.io/gh/lefou/{project-name}"]
 endif::[]
 
 
@@ -21,6 +21,8 @@ Mill version {min-mill-version} or newer is required.
 
 [source,scala,subs="attributes,verbatim"]
 ----
+import $ivy.`de.tototec::de.tobiasroeser.mill.spring.boot::{version}`
+
 import mill._
 import mill.scalalib._
 import de.tobiasroeser.mill.spring.boot.SpringBootModule
@@ -35,9 +37,27 @@ object app extends MavenModule with SpringBootModule {
 # Run the Spring-Boot Application
 $ mill app.run
 
-# Package as exeutable Spring-Boot Application
-$ mill app.assembly
+# Package as executable Spring-Boot Application
+$ mill app.springBootAssembly
 ----
+
+== Targets and Configuration
+
+`def springBootToolsVersion: T[String]`::
+_Required._ Specifies the version of the Spring Boot tools.
+
+`def springBootAssembly: T[PathRef]`::
+Package an (executable) JAR.
+You can run the application with `java -jar out/app/springBootAssembly.dest/out.jar`.
+
+`def springBootPrependScript: T[String]`::
+A script prepended to the resulting `springBootAssembly` to make it executable.
+This uses the same prepend script as Mill `JavaModule` does, so it supports most Linux/Unix shells (probably not `fish`) as well as Windows cmd shell (the file needs a `.bat` or `.cmd` extension).
+Set it to `""` if you don't want an executable JAR.
+
+`def springBootMainClass: T[String]`::
+The Class holding the Spring Boot Application entrypoint.
+By default, Spring Boot will try to auto-detect it.
 
 == Download
 
@@ -45,18 +65,16 @@ You can download binary releases from https://search.maven.org/artifact/de.totot
 
 Please make sure to use the correct _mill platform suffix_ matching your used mill version.
 
-
 == License
 
 This project is published under the terms of the https://www.apache.org/licenses/LICENSE-2.0[Apache License, version 2]
 
-
 == About
 
 Mill::
-  https://github.com/lihaoyi/mill[Mill] is a Scala-based open source build tool.
-  In my opinion the best build tool for the JVM.
-  It is fast, reliable and easy to understand.
+https://github.com/lihaoyi/mill[Mill] is a Scala-based open source build tool.
+In my opinion the best build tool for the JVM.
+It is fast, reliable and easy to understand.
 
 Me::
 +
@@ -64,12 +82,13 @@ Me::
 I am https://github.com/lefou/[Tobias Roeser], a professional software developer who loves to create and use open source tools.
 I'm actively developing and maintaining mill as well as https://github.com/lefou?utf8=%E2%9C%93&tab=repositories&q=topic%3Amill&type=&language=[several mill plugins].
 
-If you like my work, please star it on GitHub. You can also support me via https://github.com/sponsors/lefou[GitHub Sponsors].
+If you like my work, please star it on GitHub.
+You can also support me via https://github.com/sponsors/lefou[GitHub Sponsors].
 --
 
 Contributing::
-  If you found a bug or have a feature request, please open a {projectHome}/issues[new issue on GitHub].
-  I also accept {projectHome}/pulls[pull requests on GitHub].
+If you found a bug or have a feature request, please open a {projectHome}/issues[new issue on GitHub].
+I also accept {projectHome}/pulls[pull requests on GitHub].
 
 == Changelog
 

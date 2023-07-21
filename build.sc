@@ -10,7 +10,7 @@ import de.tobiasroeser.mill.vcs.version.VcsVersion
 import mill._
 import mill.api.Loose
 import mill.contrib.scoverage.ScoverageModule
-import mill.define.{Command, Module, TaskModule, Target, Task}
+import mill.define.{Module, Target, Task}
 import mill.scalalib._
 import mill.scalalib.api.ZincWorkerUtil
 import mill.scalalib.publish._
