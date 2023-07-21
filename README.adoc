@@ -44,21 +44,25 @@ $ mill app.springBootAssembly
 
 == Targets and Configuration
 
+Your module needs to extend the `de.tobiasroeser.mill.spring.boot.SpringBootModule` trait. The following targets are available:
+
 `def springBootToolsVersion: T[String]`::
-_Required._ Specifies the version of the Spring Boot tools.
+_Required._ Override it to specify the version of the Spring Boot tools.
 
 `def springBootAssembly: T[PathRef]`::
 Package an (executable) JAR.
++
 You can run the application with `java -jar out/app/springBootAssembly.dest/out.jar`.
 
 `def springBootPrependScript: T[String]`::
+
 A script prepended to the resulting `springBootAssembly` to make it executable.
-This uses the same prepend script as Mill `JavaModule` does, so it supports most Linux/Unix shells (probably not `fish`) as well as Windows cmd shell (the file needs a `.bat` or `.cmd` extension).
+This uses the same prepend script logic as Mill `JavaModule#prependScript` does, so it supports most Linux/Unix shells (probably not `fish`) as well as Windows cmd shell (the file needs a `.bat` or `.cmd` extension in that case).
 Set it to `""` if you don't want an executable JAR.
 
 `def springBootMainClass: T[String]`::
-The Class holding the Spring Boot Application entrypoint.
-By default, Spring Boot will try to auto-detect it.
+The main class holding the Spring Boot Application entrypoint.
+By default, the value of `JavaModule.mainClass` is used, when defined, otherwise Spring Boot will try to auto-detect it.
 
 == Download
 
