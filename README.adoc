@@ -88,8 +88,8 @@ You can also support me via https://github.com/sponsors/lefou[GitHub Sponsors].
 --
 
 Contributing::
-If you found a bug or have a feature request, please open a {projectHome}/issues[new issue on GitHub].
-I also accept {projectHome}/pulls[pull requests on GitHub].
+If you found a bug or have a feature request, please open a {project-home}/issues[new issue on GitHub].
+I also accept {project-home}/pulls[pull requests on GitHub].
 
 == Changelog
 
