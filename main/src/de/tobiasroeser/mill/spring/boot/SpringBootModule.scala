@@ -15,16 +15,15 @@ trait SpringBootModule extends SpringBootModulePlatform {
   def springBootToolsVersion: T[String]
 
   override def springBootToolsIvyDeps: T[Agg[Dep]] = T {
-    super.springBootToolsIvyDeps() ++
-      Agg(
-        ivy"org.springframework.boot:spring-boot-loader-tools:${springBootToolsVersion()}"
-      )
+    Agg(
+      ivy"org.springframework.boot:spring-boot-loader-tools:${springBootToolsVersion()}"
+    )
   }
 
   def springBootToolsWorker: Worker[SpringBootWorker] = T.worker {
     val cl =
       new URLClassLoader(
-        springBootToolsClasspath().map(_.path.toIO.toURI().toURL()).toArray[URL],
+        springBootToolsClasspath().map(_.path.toIO.toURI().toURL()).iterator.toArray[URL],
         getClass().getClassLoader()
       )
     val className =

@@ -1,5 +1,5 @@
-= mill-spring-boot - Support packaging Spring Boot applications with Mill
-:version: 0.0.0-20-3b2d95
+= mill-spring-boot - Packaging Spring Boot Applications with Mill
+:version: 0.0.1
 :mill-platform: 0.11
 :artifact-name: de.tobiasroeser.mill.spring.boot
 :project-name: mill-spring-boot
@@ -14,6 +14,7 @@ image:{project-home}/workflows/.github/workflows/build.yml/badge.svg["Build Stat
 image:https://codecov.io/gh/lefou/{project-name}/branch/main/graph/badge.svg[Test Coverage (Codecov.io),link="https://codecov.io/gh/lefou/{project-name}"]
 endif::[]
 
+https://mill-build.com[Mill] plugin to support packing of https://spring.io/projects/spring-boot[Spring Boot] Applications.
 
 == Quickstart
 
@@ -27,7 +28,7 @@ import mill._
 import mill.scalalib._
 import de.tobiasroeser.mill.spring.boot.SpringBootModule
 
-object app extends MavenModule with SpringBootModule {
+object app extends JavaModule with SpringBootModule {
   override def springBootToolsVersion = "{example-spring-boot-version}"
 }
 ----
@@ -92,3 +93,6 @@ I also accept {projectHome}/pulls[pull requests on GitHub].
 
 == Changelog
 
+=== 0.0.1 - 2023-07-21
+
+* Initial public release
