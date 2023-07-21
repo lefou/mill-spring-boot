@@ -1,4 +1,4 @@
-= mill-sping-boot - Support packaging Spring Boot applications with Mill
+= mill-spring-boot - Support packaging Spring Boot applications with Mill
 :version: 0.0.0-20-3b2d95
 :mill-platform: 0.11
 :artifact-name: de.tobiasroeser.mill.spring.boot
