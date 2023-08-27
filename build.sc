@@ -30,7 +30,7 @@ trait Deps {
   val scoverageVersion = "2.0.10"
   val slf4j = ivy"org.slf4j:slf4j-api:1.7.25"
   val utilsFunctional = ivy"de.tototec:de.tototec.utils.functional:2.0.1"
-  val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:2.7.14"
+  val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:2.7.15"
 }
 object Deps_0_11 extends Deps {
   override def millVersion = "0.11.0"
