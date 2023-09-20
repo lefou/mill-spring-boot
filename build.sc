@@ -33,7 +33,7 @@ trait Deps {
   val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:2.7.15"
 }
 object Deps_0_11 extends Deps {
-  override def millVersion = "0.11.0"
+  override def millVersion = "0.11.4"
   override def millPlatform = "0.11"
   override def testWithMill = Seq("0.11.1", millVersion)
   override def osLib = ivy"com.lihaoyi::os-lib:0.9.1"
