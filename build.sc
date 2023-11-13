@@ -39,7 +39,7 @@ object Deps_0_11 extends Deps {
   override def osLib = ivy"com.lihaoyi::os-lib:0.9.1"
 }
 object Deps_0_10 extends Deps {
-  override def millVersion = "0.10.0"
+  override def millVersion = "0.10.13"
   override def millPlatform = "0.10"
   override def testWithMill = Seq("0.10.12", "0.10.3", millVersion)
   override def osLib = ivy"com.lihaoyi::os-lib:0.8.0"
