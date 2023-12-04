@@ -231,8 +231,8 @@ trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
          |import $$file.helper
          |
          |object TestVersions {
-         |  val minSpringBootLoaderToolsVersion = "2.7.3"
-         |  val latestSpringBootLoaderToolsVersions = "3.1.5"
+         |  val minSpringBootToolsVersion = "2.7.3"
+         |  val latestSpringBootToolsVersions = "3.1.5"
          |}
          |""".stripMargin
     )
