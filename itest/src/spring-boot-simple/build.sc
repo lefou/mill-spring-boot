@@ -9,7 +9,7 @@ import de.tobiasroeser.mill.spring.boot.SpringBootModule
 
 object app extends MavenModule with SpringBootModule {
   override def millSourcePath = super.millSourcePath / os.up
-  override def springBootToolsVersion = "2.7.3"
+  override def springBootToolsVersion = TestVersions.minSpringBootToolsVersion
   override def ivyDeps = Agg(
     Deps.slf4j
   )
