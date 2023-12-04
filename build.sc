@@ -241,11 +241,17 @@ object P extends Module {
    * Update the millw script.
    */
   def millw() = T.command {
+    val targetBat = mill.util.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw.bat")
+    val millwBat = T.workspace / "millw.bat"
+    os.copy.over(targetBat.path, millwBat)
+    os.perms.set(millwBat, os.perms(millwBat) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
+
     val target = mill.util.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw")
     val millw = T.workspace / "millw"
     os.copy.over(target.path, millw)
     os.perms.set(millw, os.perms(millw) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
-    target
+
+    Seq(target, targetBat)
   }
 
 }
