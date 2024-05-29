@@ -9,7 +9,7 @@ import de.tobiasroeser.mill.spring.boot.SpringBootModule
 
 object app extends ScalaModule with SpringBootModule {
   override def millSourcePath = super.millSourcePath / os.up
-  def scalaVersion = "2.13.12"
+  def scalaVersion = "2.13.14"
   override def springBootToolsVersion = TestVersions.latestSpringBootToolsVersion
   // Add many dependencies to ensure we do not fail the executable assembly
   // See these Mill issues

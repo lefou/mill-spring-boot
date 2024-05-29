@@ -19,7 +19,7 @@ trait Deps {
   def springBootToolsVersion = "2.7.3"
   def millPlatform: String
   def millVersion: String
-  def scalaVersion: String = "2.13.12"
+  def scalaVersion: String = "2.13.14"
   def testWithMill: Seq[String]
 
   def millMainApi = ivy"com.lihaoyi::mill-main-api:${millVersion}"
@@ -27,10 +27,10 @@ trait Deps {
   def millScalalib = ivy"com.lihaoyi::mill-scalalib:${millVersion}"
   def osLib = ivy"com.lihaoyi::os-lib:0.6.3"
   val scalaTest = ivy"org.scalatest::scalatest:3.2.17"
-  val scoverageVersion = "2.0.11"
+  val scoverageVersion = "2.1.1"
   val slf4j = ivy"org.slf4j:slf4j-api:1.7.25"
   val utilsFunctional = ivy"de.tototec:de.tototec.utils.functional:2.0.1"
-  val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:3.1.5"
+  val springBootLoaderTools = ivy"org.springframework.boot:spring-boot-loader-tools:3.2.6"
 }
 object Deps_0_11 extends Deps {
   override def millVersion = "0.11.0" // scala-steward:off
@@ -246,11 +246,17 @@ object P extends Module {
    * Update the millw script.
    */
   def millw() = T.command {
+    val targetBat = mill.util.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw.bat")
+    val millwBat = T.workspace / "millw.bat"
+    os.copy.over(targetBat.path, millwBat)
+    os.perms.set(millwBat, os.perms(millwBat) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
+
     val target = mill.util.Util.download("https://raw.githubusercontent.com/lefou/millw/master/millw")
     val millw = T.workspace / "millw"
     os.copy.over(target.path, millw)
     os.perms.set(millw, os.perms(millw) + java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE)
-    target
+
+    Seq(target, targetBat)
   }
 
 }
