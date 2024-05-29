@@ -2,6 +2,7 @@ import $file.plugins
 import $file.shared
 
 import helper.Deps
+import shared.TestVersions
 import de.tobiasroeser.lambdatest
 
 import mill._, mill.scalalib._
