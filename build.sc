@@ -232,7 +232,7 @@ trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
          |
          |object TestVersions {
          |  val minSpringBootToolsVersion = "2.7.3"
-         |  val latestSpringBootToolsVersions = "3.1.5"
+         |  val latestSpringBootToolsVersion = "3.1.5"
          |}
          |""".stripMargin
     )
