@@ -156,7 +156,7 @@ trait MainCross extends PluginModule with Cross.Module[String] { main =>
 /**
  * Explore some Maven deps.
  */
-object explore extends ScalaModule {
+object dummy extends ScalaModule {
   val Deps = Deps_0_11
   def scalaVersion = Deps.scalaVersion
   override def ivyDeps = Agg(
@@ -229,6 +229,11 @@ trait ItestCross extends MillIntegrationTestModule with Cross.Module[String] {
       s"""import $$ivy.`org.scoverage::scalac-scoverage-runtime:${deps.scoverageVersion}`
          |import $$ivy.`org.scalatest::scalatest:${deps.scalaTest.dep.version}`
          |import $$file.helper
+         |
+         |object TestVersions {
+         |  val minSpringBootToolsVersion = "2.7.3"
+         |  val latestSpringBootToolsVersion = "3.1.5"
+         |}
          |""".stripMargin
     )
     PathRef(T.dest)
