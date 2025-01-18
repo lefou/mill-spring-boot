@@ -19,7 +19,7 @@ trait Deps {
   def springBootToolsVersion = "2.7.3"
   def millPlatform: String
   def millVersion: String
-  def scalaVersion: String = "2.13.14"
+  def scalaVersion: String = "2.13.16"
   def testWithMill: Seq[String]
 
   def millMainApi = ivy"com.lihaoyi::mill-main-api:${millVersion}"
